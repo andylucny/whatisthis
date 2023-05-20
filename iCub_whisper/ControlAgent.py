@@ -1,4 +1,5 @@
 import numpy as np
+import torch
 from agentspace import Agent, space
 from pyicubsim import iCubEmotion
 from speak import speak
@@ -18,10 +19,11 @@ def Attention(query,keys,values,d):
 
 class ControlAgent(Agent):
 
-    def __init__(self, nameText, nameFeatures, nameName):
+    def __init__(self, nameText, nameFeatures, nameName, nameAudio):
         self.nameText = nameText
         self.nameFeatures = nameFeatures
         self.nameName = nameName
+        self.nameAudio = nameAudio
         super().__init__()
 
     def match(self,pattern,text):
@@ -62,8 +64,8 @@ class ControlAgent(Agent):
                 speak(self.matched()[0])
             elif text == "smile":
                 self.emotion.set('hap')
-            elif self.match(r'.*this is (a|the) (.*)',text) and not "launch" in text:
-                named = self.matched()[1]
+            elif self.match(r'.*(this|it) is (a|the|) (.+)',text) and not "launch" in text:
+                named = self.matched()[2]
                 print("mapping",named)
                 act = [np.cos(self.fi), np.sin(self.fi)]
                 self.fi += 0.2
@@ -79,19 +81,20 @@ class ControlAgent(Agent):
             elif self.match(r'.*what is this.*',text):
                 if len(self.keys) > 0:
                     act = Attention(query,self.keys,self.values,len(query)**0.5)
-                    #print('act',act)
                     psi = np.arctan2(act[1],act[0])
-                    #print('psi',psi)
                     ind = int(np.round(psi/0.2))
-                    #print('ind',ind)
                     if ind >= 0 and ind < len(self.names):
+                        error = abs(psi - np.round(psi/0.2))
+                        sz = np.linalg.norm(psi)
+                        error0 = np.linalg.norm(act-self.values[ind])
                         name = self.names[ind]
-                        print('name',name)
+                        print('name',name,'ind',ind,'error',error0,error,'sz',sz)
                         space(validity=2.0)[self.nameName] = name
-                        space(validity=2.0, priority=2.0)[self.nameText] = '' # do not listen to itself
-                        speak('A '+name)
-                        #space(validity=2.0)[self.nameName] = name
-                        #space(validity=2.0, priority=2.0)[self.nameText] = '' # do not listen to itself
+                        noaudio = torch.from_numpy(np.array([]))
+                        space(priority=2.0)[self.nameAudio] = noaudio # do not listen to itself
+                        speak('This is a '+name)
+                        time.sleep(0.5)
+                        space(priority=2.0)[self.nameAudio] = None # listen again
                     else:
                         speak('I have no idea')
                 else:

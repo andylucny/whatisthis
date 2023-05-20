@@ -1,5 +1,12 @@
 import threading
 import time
+from enum import Enum
+from queue import Queue
+
+class Trigger(Enum):
+    NORMAL = 0
+    NAMES = 1
+    #NAMES_AND_VALUES = 2
     
 class Variable:
 
@@ -23,8 +30,14 @@ class Variable:
         else:
             return False
             
-    def register(self,agent):
-        self.registered.append(agent)
+    def register(self,agent,type=Trigger.NORMAL):
+        self.registered.append((agent,type))
+
+    def deregister(self,agent,type):
+        self.registered.remove((agent,type))
+        
+    def triggers(self):
+        return self.registered[:]
 
 class SpaceAdaptor:
 
@@ -76,17 +89,17 @@ class Space:
             if not name in self.variables:
                 self.variables[name] = Variable()
             if self.variables[name].set(value,validity,priority):
-                for agent in self.variables[name].registered[:]:
+                for agent, type in self.variables[name].triggers():
                     if agent.stopped:
-                        self.variables[name].registered.remove(agent)
+                        self.variables[name].deregister(agent,type)
                     else:
-                        agent.trigger()
+                        agent.trigger(None if type == Trigger.NORMAL else name)
             
-    def attach_trigger(self, name, agent):
+    def attach_trigger(self, name, agent, type=Trigger.NORMAL):
         with self.lock:
             if not name in self.variables:
                 self.variables[name] = Variable()
-            self.variables[name].register(agent)
+            self.variables[name].register(agent,type)
 
 space = Space[""]
 
@@ -95,6 +108,7 @@ class Agent:
     def __init__(self):
         self.stopped = False
         self.event = threading.Event()
+        self.triggered_name = None
         self.timer = None
         self.t = threading.Thread(name="agent", target=self.run)
         self.t.start()
@@ -113,7 +127,8 @@ class Agent:
         self.event.wait()
         self.event.clear()
     
-    def trigger(self):
+    def trigger(self, name=None):
+        self.triggered_name = name
         self.event.set()
         
     def run(self):
@@ -123,6 +138,7 @@ class Agent:
             if self.stopped:
                 break
             self.senseSelectAct()
+            self.triggered_name = None
         
     def init(self): # to be overiden
         print('I am ready')
@@ -136,6 +152,9 @@ class Agent:
         self.stopped = True
         self.trigger()
         
+    def triggered(self):
+        return self.triggered_name
+        
 if __name__ == "__main__":
 
     space(validity=2,priority=1)["a"] = 3
@@ -146,6 +165,14 @@ if __name__ == "__main__":
     print(space(default=-1)["a"])
     space(priority=0)["a"] = 4
     print(space(default=-1)["a"])
+    print("-----")
+    space["b"] = 112
+    space(priority=2)["b"] = ''
+    space["b"] = 158
+    print(space["b"],"=",'')
+    space(priority=2)["b"] = None
+    space["b"] = 158
+    print(space["b"],"=",158)
     print("-----")
     
     class Agent1(Agent):
@@ -166,13 +193,21 @@ if __name__ == "__main__":
         def senseSelectAct(self):
             i = space(default=-1)["a"]
             print("agent 2",self.arg,"reads ",i)
+
+    class Agent3(Agent):
+        def init(self):
+            space.attach_trigger("a",self,Trigger.NAMES)
+        def senseSelectAct(self):
+            print("agent 3: triggered",self.triggered())
     
     a1 = Agent1()
     a2 = Agent2("x")
+    a3 = Agent3()
     print('waiting for 10s')
     time.sleep(10)
     print('done')
     a1.stop()
     time.sleep(3)
     a2.stop()
+    a3.stop()
     

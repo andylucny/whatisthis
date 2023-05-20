@@ -16,7 +16,7 @@ class ViewerAgent(Agent):
         image = space[self.nameImage]
         if image is None:
             return
-        image = cv.resize(image,(image.shape[1]//2,image.shape[0]//2))
+        #image = cv.resize(image,(image.shape[1]//2,image.shape[0]//2))
         name = space(default='')[self.nameName]
         cv.putText(image,name,(image.shape[1]//3,image.shape[0]//2),0,2.0,(0,0,255),3)
 
