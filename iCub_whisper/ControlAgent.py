@@ -19,11 +19,12 @@ def Attention(query,keys,values,d):
 
 class ControlAgent(Agent):
 
-    def __init__(self, nameText, nameFeatures, nameName, nameAudio):
+    def __init__(self, nameText, nameFeatures, nameName, nameAudio, loadKeysAndValues=False):
         self.nameText = nameText
         self.nameFeatures = nameFeatures
         self.nameName = nameName
         self.nameAudio = nameAudio
+        self.loadKeysAndValues = loadKeysAndValues
         super().__init__()
 
     def match(self,pattern,text):
@@ -39,11 +40,21 @@ class ControlAgent(Agent):
         return self.groups
 
     def init(self):
-        self.keys = [] #list(np.loadtxt("keys.npy"))
-        self.values = [] #list(np.loadtxt("values.npy"))
-        self.names = [] #
-        #with open("names.txt", "rt") as f:
-        #    self.names = f.read().rstrip('\n').split('\n')
+        self.keys = []
+        self.values = []
+        self.names = []
+        if self.loadKeysAndValues:
+            self.keys = list(np.loadtxt("keys.npy"))
+            self.values = list(np.loadtxt("values.npy"))
+            self.names = []
+            with open("names.txt", "rt") as f:
+                self.names = f.read().rstrip('\n').split('\n')
+            if len(self.keys) != len(self.values) or len(self.values) != len(self.names):
+                self.keys = []
+                self.values = []
+                self.names = []
+            else:
+                print(len(self.keys),'keys, values and names loaded')
         self.emotion = iCubEmotion()
         self.fi = 0
         space.attach_trigger(self.nameText,self)

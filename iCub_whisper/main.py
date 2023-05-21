@@ -34,9 +34,10 @@ CameraAgent(0,'camera') # get image from camera
 time.sleep(1)
 PerceptionAgent('camera','features') # dino encoder
 time.sleep(1)
-ControlAgent('text','features','name','audio') # asociating and other voice command
+ControlAgent('text','features','name','audio',loadKeysAndValues=False) # asociating and other voice command
 ViewerAgent('camera','name') # view image from camera
 
+"""
 class MonitoringAgent(Agent):
     def init(self):
         self.t0 = time.time()
@@ -47,5 +48,5 @@ class MonitoringAgent(Agent):
         if self.triggered() == 'text':
             print('<',space['text'],'>')
 
-#MonitoringAgent()
-
+MonitoringAgent()
+"""
