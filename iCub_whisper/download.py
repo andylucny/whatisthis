@@ -3,6 +3,7 @@ import requests
 import os
 from zipfile import ZipFile
 from io import BytesIO
+import torch
 import whisper
 
 def download_espeak():
@@ -27,8 +28,11 @@ def download_DinoViT_model():
 def download_whisper():    
     whisper.load_model("base.en")
 
-if __name__ == "__main__":
+def download_all():
     download_espeak()
     download_DinoViT_model()
     download_whisper()
+
+if __name__ == "__main__":
+    download_all()
     print("done")

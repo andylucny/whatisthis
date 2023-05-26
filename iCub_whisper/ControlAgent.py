@@ -1,5 +1,6 @@
 import numpy as np
 import torch
+from transformers import pipeline
 from agentspace import Agent, space
 from pyicubsim import iCubEmotion
 from speak import speak
@@ -57,6 +58,7 @@ class ControlAgent(Agent):
                 print(len(self.keys),'keys, values and names loaded')
         self.emotion = iCubEmotion()
         self.fi = 0
+        self.generate_text = pipeline(model="databricks/dolly-v2-3b",torch_dtype=torch.bfloat16, trust_remote_code=True, device_map="auto") 
         space.attach_trigger(self.nameText,self)
         
     def senseSelectAct(self):
@@ -110,3 +112,10 @@ class ControlAgent(Agent):
                         speak('I have no idea')
                 else:
                     speak('I have no idea')
+            elif self.match(r'(E|e)xplain.*',text):
+                print(text)
+                print("")
+                res = self.generate_text(text)
+                print(res[0]["generated_text"])
+                speak(res[0]["generated_text"])
+

@@ -11,7 +11,7 @@ class PerceptionAgent(Agent):
         super().__init__()
 
     def init(self):
-        self.session = ort.InferenceSession("models/dino/dino_deits8.onnx", providers=['CUDAExecutionProvider'])
+        self.session = ort.InferenceSession("dino_deits8.onnx", providers=['CUDAExecutionProvider'])
         self.input_names = [input.name for input in self.session.get_inputs()] # ['x.1']
         self.output_names = [output.name for output in self.session.get_outputs()] # ['1158']
         space.attach_trigger(self.nameImage,self)

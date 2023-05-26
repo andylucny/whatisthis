@@ -1,6 +1,9 @@
 import os
 os.environ['PATH'] += "iCumSim\\bin;"
 
+from download import download_all
+download_all()
+
 from agentspace import Agent, space, Trigger
 from ListenerAgent import ListenerAgent
 from TranscriptionAgent import TranscriptionAgent
