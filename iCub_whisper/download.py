@@ -6,16 +6,6 @@ from io import BytesIO
 import torch
 import whisper
 
-def download_espeak():
-    if os.path.exists("espeak.exe"):
-        return
-    print("downloading espeak")
-    url = "https://www.agentspace.org/download/espeak.zip"
-    response = requests.get(url)
-    zip = ZipFile(BytesIO(response.content))
-    zip.extractall()
-    print("espeak downloaded")
-
 def download_DinoViT_model():
     if os.path.exists("dino_deits8.onnx"):
         return
@@ -29,7 +19,6 @@ def download_whisper():
     whisper.load_model("base.en")
 
 def download_all():
-    download_espeak()
     download_DinoViT_model()
     download_whisper()
 
