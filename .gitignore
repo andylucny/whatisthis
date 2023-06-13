@@ -176,5 +176,8 @@ _/
 
 iCub/
 
+#models
+LaMini/
+dino_deits8.onnx
 
 

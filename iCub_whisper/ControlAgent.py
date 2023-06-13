@@ -1,6 +1,7 @@
 import numpy as np
 import torch
-#from transformers import pipeline # dolly - poor quality
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+from transformers import pipeline
 from agentspace import Agent, space
 from pyicubsim import iCubEmotion
 from speak import speak
@@ -58,7 +59,10 @@ class ControlAgent(Agent):
                 print(len(self.keys),'keys, values and names loaded')
         self.emotion = iCubEmotion()
         self.fi = 0
-        #self.generate_text = pipeline(model="databricks/dolly-v2-3b",torch_dtype=torch.bfloat16, trust_remote_code=True, device_map="auto") 
+        checkpoint = "./model/"  # LaMini-Flan-T5-248M
+        tokenizer = AutoTokenizer.from_pretrained(checkpoint)
+        base_model = AutoModelForSeq2SeqLM.from_pretrained(checkpoint,device_map='auto',torch_dtype=torch.float32)
+        self.pipe = pipeline('text2text-generation',model = base_model,tokenizer = tokenizer,max_length = 512,do_sample=True,temperature=0.3,top_p=0.95)
         space.attach_trigger(self.nameText,self)
         
     def senseSelectAct(self):
@@ -112,10 +116,13 @@ class ControlAgent(Agent):
                         speak('I have no idea')
                 else:
                     speak('I have no idea')
-            #elif self.match(r'(E|e)xplain.*',text):
-            #    print(text)
-            #    print("")
-            #    res = self.generate_text(text)
-            #    print(res[0]["generated_text"])
-            #    speak(res[0]["generated_text"])
+            elif self.match(r'(E|e)xplain.*',text):
+                print(text)
+                print("")
+                generated_text = self.pipe(text)
+                response = ''
+                for sentence in generated_text:
+                    response += sentence['generated_text']
+                print(response)
+                speak(response)
 
