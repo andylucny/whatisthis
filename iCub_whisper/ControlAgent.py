@@ -15,9 +15,10 @@ def softmax(x):
 def Attention(query,keys,values,d):
     keys_matrix = np.array(keys,np.float32)
     values_matrix = np.array(values,np.float32)
-    c = softmax(query.dot(keys_matrix.T)/d)
+    cossim = query.dot(keys_matrix.T)
+    c = softmax(cossim/d)
     output = c.dot(values_matrix)
-    return output
+    return output, np.max(cossim)/len(query)
 
 class ControlAgent(Agent):
 
@@ -52,14 +53,17 @@ class ControlAgent(Agent):
             with open("names.txt", "rt") as f:
                 self.names = f.read().rstrip('\n').split('\n')
             if len(self.keys) != len(self.values) or len(self.values) != len(self.names):
+                print('learning from scratch')
                 self.keys = []
                 self.values = []
                 self.names = []
             else:
                 print(len(self.keys),'keys, values and names loaded')
+        else:
+            print('learning from scratch')
         self.emotion = iCubEmotion()
         self.fi = 0
-        checkpoint = "./model/"  # LaMini-Flan-T5-248M
+        checkpoint = "./LaMini/"  # LaMini-Flan-T5-248M
         tokenizer = AutoTokenizer.from_pretrained(checkpoint)
         base_model = AutoModelForSeq2SeqLM.from_pretrained(checkpoint,device_map='auto',torch_dtype=torch.float32)
         self.pipe = pipeline('text2text-generation',model = base_model,tokenizer = tokenizer,max_length = 512,do_sample=True,temperature=0.3,top_p=0.95)
@@ -97,15 +101,15 @@ class ControlAgent(Agent):
                 speak('O.K.')
             elif self.match(r'.*what is this.*',text):
                 if len(self.keys) > 0:
-                    act = Attention(query,self.keys,self.values,len(query)**0.5)
+                    act, confidence = Attention(query,self.keys,self.values,len(query)**0.5)
                     psi = np.arctan2(act[1],act[0])
                     ind = int(np.round(psi/0.2))
-                    if ind >= 0 and ind < len(self.names):
+                    if confidence >= 9 and ind >= 0 and ind < len(self.names):
                         error = abs(psi - np.round(psi/0.2))
                         sz = np.linalg.norm(psi)
                         error0 = np.linalg.norm(act-self.values[ind])
                         name = self.names[ind]
-                        print('name',name,'ind',ind,'error',error0,error,'sz',sz)
+                        print('name',name,'confidence',confidence) #'ind',ind,'error',error0,error,'sz',sz)
                         space(validity=2.0)[self.nameName] = name
                         noaudio = torch.from_numpy(np.array([]))
                         space(priority=2.0)[self.nameAudio] = noaudio # do not listen to itself
@@ -113,6 +117,7 @@ class ControlAgent(Agent):
                         time.sleep(0.5)
                         space(priority=2.0)[self.nameAudio] = None # listen again
                     else:
+                        print('confidence',confidence) 
                         speak('I have no idea')
                 else:
                     speak('I have no idea')
