@@ -1,5 +1,5 @@
 import os
-os.environ['PATH'] += "iCumSim\\bin;"
+os.environ['PATH'] += "iCubSim\\bin;"
 
 from download import download_all
 download_all()
@@ -37,7 +37,7 @@ CameraAgent(0,'camera') # get image from camera
 time.sleep(1)
 PerceptionAgent('camera','features') # dino encoder
 time.sleep(1)
-ControlAgent('text','features','name','audio',loadKeysAndValues=False) # asociating and other voice command
+ControlAgent('text','features','name','audio',loadKeysAndValues=False)#,minConfidence=9.0) # asociating and other voice command
 ViewerAgent('camera','name') # view image from camera
 
 """

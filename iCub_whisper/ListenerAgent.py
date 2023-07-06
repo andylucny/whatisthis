@@ -11,6 +11,7 @@ class ListenerAgent(Agent):
         
     def init(self):
         r = sr.Recognizer()
+        r.adjust_for_ambient_noise = True
         r.energy_threshold = 300
         r.pause_threshold = 0.3#0.8
         r.non_speaking_duration = 0.3

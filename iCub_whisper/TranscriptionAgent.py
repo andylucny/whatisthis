@@ -19,7 +19,7 @@ class TranscriptionAgent(Agent):
             if len(audio_data) > 0:
                 print('transcripting...')
                 result = self.audio_model.transcribe(audio_data,language='english')
-                print('...transcripted')
+                print('...transcripted:',result['text'])
                 space(validity=1.0)[self.nameText] = result['text']
                 #print(result['text'])
 

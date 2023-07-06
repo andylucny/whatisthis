@@ -22,12 +22,13 @@ def Attention(query,keys,values,d):
 
 class ControlAgent(Agent):
 
-    def __init__(self, nameText, nameFeatures, nameName, nameAudio, loadKeysAndValues=False):
+    def __init__(self, nameText, nameFeatures, nameName, nameAudio, loadKeysAndValues=False, minConfidence=0.0):
         self.nameText = nameText
         self.nameFeatures = nameFeatures
         self.nameName = nameName
         self.nameAudio = nameAudio
         self.loadKeysAndValues = loadKeysAndValues
+        self.minConfidence = minConfidence
         super().__init__()
 
     def match(self,pattern,text):
@@ -104,7 +105,7 @@ class ControlAgent(Agent):
                     act, confidence = Attention(query,self.keys,self.values,len(query)**0.5)
                     psi = np.arctan2(act[1],act[0])
                     ind = int(np.round(psi/0.2))
-                    if confidence >= 9 and ind >= 0 and ind < len(self.names):
+                    if confidence >= self.minConfidence and ind >= 0 and ind < len(self.names):
                         error = abs(psi - np.round(psi/0.2))
                         sz = np.linalg.norm(psi)
                         error0 = np.linalg.norm(act-self.values[ind])
