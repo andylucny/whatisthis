@@ -13,7 +13,7 @@ def download_and_save(url,path):
     print(path,"downloaded")
     
 def download_DinoViT_model():
-    download_and_save("https://www.agentspace.org/download/dino_deits8-224-final.onnx","dino_deits8.onnx")
+    download_and_save("https://www.agentspace.org/download/dino_deits8-224-final.onnx","dino_deits8-224-final.onnx")
 
 def download_robot_config():
     download_and_save("https://www.agentspace.org/download/nico_humanoid_upper_rh7d_ukba.json","nico_humanoid_upper_rh7d_ukba.json")

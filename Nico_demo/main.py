@@ -19,7 +19,10 @@ import signal
 import time
 
 def quit():
-    del robot
+    try:
+        del robot
+    except:
+        pass
     os._exit(0)
     
 # exit on ctrl-c
