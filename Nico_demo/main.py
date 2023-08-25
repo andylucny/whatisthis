@@ -7,9 +7,10 @@ from agentspace import Agent, space, Trigger
 
 from CameraAgent import CameraAgent
 from PerceptionAgent import PerceptionAgent
-#from ActionAgent import ActionAgent
+from ActionAgent import ActionAgent
 from ViewerAgent import ViewerAgent
-#from ControlAgent import ControlAgent
+from ControlAgent import ControlAgent
+from SpeakerAgent import SpeakerAgent
 
 from nicomotion.Motion import Motion
 motorConfig = './nico_humanoid_upper_rh7d_ukba.json'
@@ -35,22 +36,15 @@ CameraAgent(0,'camera') # get image from the right eye
 time.sleep(1)
 PerceptionAgent('camera','features','points') # dino model
 time.sleep(1)
-#ActionAgent(robot,'points') # turn to shown objects
-#time.sleep(1)
+ActionAgent(robot,'points') # turn to shown objects
+time.sleep(1)
+ControlAgent('text','features','name',loadKeysAndValues=True) # asociating 
+time.sleep(1)
 ViewerAgent('camera','points','name') # view image from camera
-#time.sleep(1)
-#ControlAgent('text','features','name','audio',loadKeysAndValues=False)#,minConfidence=9.0) # asociating and other voice command
+time.sleep(1)
+SpeakerAgent('name') # speach synthesis
 
-"""
-class MonitoringAgent(Agent):
-    def init(self):
-        self.t0 = time.time()
-        space.attach_trigger('audio',self,Trigger.NAMES)
-        space.attach_trigger('text',self,Trigger.NAMES)
-    def senseSelectAct(self):
-        print(time.time()-self.t0,self.triggered())
-        if self.triggered() == 'text':
-            print('<',space['text'],'>')
+def enter(text=''):
+    space['text'] = text
 
-MonitoringAgent()
-"""
+# enter('hruska')

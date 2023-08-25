@@ -2,6 +2,7 @@ from agentspace import Agent, space
 import numpy as np
 import onnxruntime as ort
 import cv2 as cv
+import time
 
 class PerceptionAgent(Agent):
 
@@ -20,6 +21,8 @@ class PerceptionAgent(Agent):
             KF.transitionMatrix = cv.setIdentity(KF.transitionMatrix)
             KF.measurementMatrix = cv.setIdentity(KF.measurementMatrix)
         self.ticks = cv.getTickCount()
+        self.hz = 0
+        self.t = int(time.time())
         space.attach_trigger(self.nameImage,self)
  
     def senseSelectAct(self):
@@ -49,6 +52,12 @@ class PerceptionAgent(Agent):
             attention /= np.max(attention)
             attention = np.asarray(attention*255,np.uint8)
             _, binary = cv.threshold(attention,0,255,cv.THRESH_BINARY|cv.THRESH_OTSU)
+            
+            disp = cv.hconcat([attention,binary])
+            disp = cv.resize(disp,(patch_size*disp.shape[1],patch_size*disp.shape[0]),interpolation=cv.INTER_NEAREST)
+            cv.imshow('attention',disp)
+            cv.waitKey(1)
+            
             indices = np.where(binary > 0)
             if len(indices[1]) > 0 and len(indices[0]) > 0:
                 point = (np.average(indices[1])/w_featmap,np.average(indices[0])/h_featmap)
@@ -62,11 +71,20 @@ class PerceptionAgent(Agent):
         for i, KF in enumerate(self.KFs):
             KF.transitionMatrix[0,2] = dt
             KF.transitionMatrix[1,3] = dt
-            predictedPoint = KF.predict()
+            prediction = KF.predict()
             if points[i][0] >= 0.0 and points[i][1] >= 0.0:
-                points[i] = tuple(KF.correct(np.array(points[i],np.float32)))
+                correction = KF.correct(np.array(points[i],np.float32))
+                points[i] = (correction[0][0],correction[1][0])
             else:
-                points[i] = tuple(predictedPoint)
-                
+                points[i] = (prediction[0][0],prediction[1][0])
+        
+        self.hz += 1
+        t = int(time.time())
+        if t != self.t:
+            fps = self.hz
+            self.hz = 0
+            self.t = t
+            space(validity=2.5)['fps'] = fps
+        
         space(validity=0.5)[self.nameFeatures] = features
         space(validity=0.5)[self.namePoints] = points

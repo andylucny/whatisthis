@@ -19,7 +19,10 @@ class ViewerAgent(Agent):
             return
         #image = cv.resize(image,(image.shape[1]//2,image.shape[0]//2))
         name = space(default='')[self.nameName]
-        cv.putText(image,name,(image.shape[1]//3,image.shape[0]//2),0,2.0,(0,255,0),3)
+        if len(name) > 0:
+            cv.putText(image,name,(image.shape[1]//3,image.shape[0]//2),0,2.0,(0,255,0),3)
+            confidence = space(default=0)['confidence']
+            cv.putText(image,str(confidence),(image.shape[1]//3,image.shape[0]//2+25),0,0.8,(0,255,0),1)
         
         points = space(default=[])[self.namePoints]
         for i, point in enumerate(points):
@@ -28,6 +31,9 @@ class ViewerAgent(Agent):
                 cv.circle(image,pt,3,(0,0,255),cv.FILLED)
                 cv.putText(image,str(i),(pt[0],pt[1]-5),0,1.0,(0,0,255),1)
 
+        fps = space(default=0)['fps']
+        cv.putText(image,str(fps),(image.shape[1]-80,30),0,1.0,(0,255,0),1)
+       
         cv.imshow("camera",image)
         key = cv.waitKey(1)
         if key == ord('s'):
