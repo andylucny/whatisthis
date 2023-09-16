@@ -9,3 +9,4 @@ disable the current device used by the speech synthesis
 call "python SpeakerAgent.py Ahoj" (from Nico_demo directory)
 and enable the disabled device 
 
+see fix_voices.txt for pyttsx3 (export, rewrite, import)

@@ -45,7 +45,7 @@ class GuiAgent(Agent):
                 break
             elif event == "Name it":
                 time.sleep(0.4)
-                space[self.nameIt] = True
+                space(validity=0.5)[self.nameIt] = True
             elif event == "Reload":
                 Vocabulary.Load()
                 for i in range(MaxN):
