@@ -6,10 +6,11 @@ import time
 
 class PerceptionAgent(Agent):
 
-    def __init__(self, nameImage, nameFeatures, namePoints):
+    def __init__(self, nameImage, nameFeatures, namePoints, namePoint):
         self.nameImage = nameImage
         self.nameFeatures = nameFeatures
         self.namePoints = namePoints
+        self.namePoint = namePoint
         super().__init__()
 
     def init(self):
@@ -48,15 +49,16 @@ class PerceptionAgent(Agent):
         attentions = attentions.reshape(nh, w_featmap, h_featmap)
 
         points = []
-        for attention in attentions:
+        for i, attention in enumerate(attentions):
             attention /= np.max(attention)
             attention = np.asarray(attention*255,np.uint8)
             _, binary = cv.threshold(attention,0,255,cv.THRESH_BINARY|cv.THRESH_OTSU)
-            
-            disp = cv.hconcat([attention,binary])
-            disp = cv.resize(disp,(patch_size*disp.shape[1],patch_size*disp.shape[0]),interpolation=cv.INTER_NEAREST)
-            cv.imshow('attention',disp)
-            cv.waitKey(1)
+
+            if i == 2: # the best attention map index
+                disp = cv.hconcat([attention,binary])
+                disp = cv.resize(disp,(patch_size*disp.shape[1],patch_size*disp.shape[0]),interpolation=cv.INTER_NEAREST)
+                cv.imshow('attention',disp)
+                cv.waitKey(1)
             
             indices = np.where(binary > 0)
             if len(indices[1]) > 0 and len(indices[0]) > 0:
@@ -88,3 +90,4 @@ class PerceptionAgent(Agent):
         
         space(validity=0.5)[self.nameFeatures] = features
         space(validity=0.5)[self.namePoints] = points
+        space(validity=0.5)[self.namePoint] = points[2] # best point

@@ -5,40 +5,41 @@ import time
 
 class ActionAgent(Agent):
 
-    def __init__(self, robot, namePoints):
+    def __init__(self, robot, namePoint):
         self.robot = robot
-        self.namePoints = namePoints
+        self.namePoint = namePoint
         super().__init__()
 
     def init(self):
         self.robot.setAngle("head_z",0.0,0.05)
         self.robot.setAngle("head_y",-25.0,0.05)
         time.sleep(2.0)
-        space.attach_trigger(self.namePoints,self)
+        space.attach_trigger(self.namePoint,self)
 
     def senseSelectAct(self):
-        points = space(default=[])[self.namePoints]
-        if len(points) != 6:
+        point = space[self.namePoint]
+        if point is None:
             return
         
-        x, y = points[2]
+        x, y = point
         
         head_x = self.robot.getAngle("head_z")
         head_y = self.robot.getAngle("head_y")
         
         reset_x, reset_y = False, False
-        if np.abs(head_x > 40):
+        if np.abs(head_x) > 40:
             if np.random.rand() > 0.95:
                 reset_x = True
         else:
             if np.random.rand() > 0.995:
                 reset_x = True
-        if head_y > 15:
+        if head_y > 20: #15
             if np.random.rand() > 0.95:
                 reset_y = True
         else:
-            if np.random.rand() > 0.995:
-                reset_y = True
+            if np.abs(head_x) > 5:
+                if np.random.rand() > 0.995:
+                    reset_y = True
         
         if reset_x:
             delta_degrees_x = -head_x

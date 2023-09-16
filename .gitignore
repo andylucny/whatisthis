@@ -176,10 +176,12 @@ _/
 
 iCub/
 
+v4l2-ctl.exe
+
 #models
 LaMini/
 dino_deits*.onnx
 *.json
-
+face/
 
 

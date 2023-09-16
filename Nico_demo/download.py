@@ -18,7 +18,7 @@ def download_DinoViT_model():
 def download_robot_config():
     download_and_save("https://www.agentspace.org/download/nico_humanoid_upper_rh7d_ukba.json","nico_humanoid_upper_rh7d_ukba.json")
 
-def download_v4l2(path,url):
+def download_and_unzip(path,url):
     if os.path.exists(path):
         return
     print("downloading",path)
@@ -28,10 +28,17 @@ def download_v4l2(path,url):
         zipfile_object = zipfile.ZipFile(file_like_object)    
         zipfile_object.extractall(".")
 
+def download_v4l2():
+    download_and_unzip("v4l2-ctl.exe","https://www.agentspace.org/download/v4l2-ctl.zip")  
+
+def download_face():
+    download_and_unzip("face/labels.txt","https://www.agentspace.org/download/face.zip")  
+
 def download_all():
     download_DinoViT_model()
     download_robot_config()
-    download_v4l2("v4l2-ctl.exe","https://www.agentspace.org/download/v4l2-ctl.zip")  
+    download_v4l2()
+    download_face()
 
 if __name__ == "__main__":
     download_all()
