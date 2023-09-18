@@ -11,7 +11,7 @@ def validName(name):
 
 class NamingAgent(Agent):
 
-    def __init__(self, nameName, nameConfidence, nameQuery, nameIt, nameText, nameKey, minConfidence=6.0):
+    def __init__(self, nameName, nameConfidence, nameQuery, nameIt, nameText, nameKey, minConfidence=6.0, language='sk'):
         self.nameName = nameName
         self.nameConfidence = nameConfidence
         self.nameQuery = nameQuery
@@ -19,6 +19,7 @@ class NamingAgent(Agent):
         self.nameText = nameText
         self.nameKey = nameKey
         self.minConfidence = minConfidence
+        self.language = language
         super().__init__()
 
     def init(self):
@@ -66,10 +67,16 @@ class NamingAgent(Agent):
             self.lastTimestamp = timestamp
             if validName(name):
                 if confidence <= self.minConfidence:
-                    response = "To je možno "+name+", ale nie som si istý."
+                    if self.language == 'sk':
+                        response = "To je možno "+name+", ale nie som si istý."
+                    else:
+                        response = "It might be a"+("n" if name[0] in ['a','e','i','o','u'] else "")+" "+name+" but I am not sure."
                 else:
                     print('confidence',confidence)
-                    response = "Toto je "+name+"."
+                    if self.language == 'sk':
+                        response = "Toto je "+name+"."
+                    else:
+                        response = "This is a"+("n" if name[0] in ['a','e','i','o','u'] else "")+" "+name+"."
                 space(validity=1.0)[self.nameText] = response
                 space[self.nameKey] = query
                 time.sleep(3)

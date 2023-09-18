@@ -38,6 +38,8 @@ signal.signal(signal.SIGINT, signal_handler)
 
 minConfidence = 6.2
 
+lang = 'en' # 'sk'
+
 GuiAgent('features','name it','key')
 time.sleep(1)
 CameraAgent(0,'camera',350) # get image from the right eye
@@ -51,10 +53,10 @@ ControlAgent('features','name','confidence','query') # asociating
 time.sleep(1)
 ViewerAgent('camera','points','face point','name',minConfidence) # view image from camera
 time.sleep(1)
-SpeakerAgent('text') # speach synthesis
+SpeakerAgent('text',language=lang) # speach synthesis
 time.sleep(1)
-NamingAgent('name','confidence','query','name it','text','key',minConfidence) # when to speak
+NamingAgent('name','confidence','query','name it','text','key',minConfidence=minConfidence,language=lang) # when to speak
 time.sleep(1)
 FaceAgent('wide camera','face position','face','emotion','face point') # face detector
 time.sleep(1)
-GreetingAgent('face point','point','text')
+GreetingAgent('face point','point','text',language=lang)

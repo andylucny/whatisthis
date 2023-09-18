@@ -4,10 +4,11 @@ import time
 
 class GreetingAgent(Agent):
 
-    def __init__(self, nameFacePoint, namePoint, nameText):
+    def __init__(self, nameFacePoint, namePoint, nameText, language='sk'):
         self.nameFacePoint = nameFacePoint
         self.namePoint = namePoint
         self.nameText = nameText
+        self.language = language
         super().__init__()
 
     def init(self):
@@ -29,7 +30,8 @@ class GreetingAgent(Agent):
             distance = np.linalg.norm(np.array(point)-np.array([0.5,0.5]))
             print(f'distance: {distance:1.2f} point: ({point[0]:1.2f},{point[1]:1.2f})')
             if distance < 0.1:
-                space(validity=1.0,priority=2.0)[self.nameText] = "Dobrý deň!"
+                greeting = "Dobrý deň!" if self.language == 'sk' else "Nice to meet you"
+                space(validity=1.0,priority=2.0)[self.nameText] = greeting
                 space(validity=0.6,priority=2.0)[self.namePoint] = (0.5,0.75)
                 time.sleep(0.5)
                 space(validity=1.1,priority=2.0)[self.namePoint] = (0.5,0.5)

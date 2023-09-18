@@ -4,13 +4,13 @@ from agentspace import Agent, space
 import pyttsx3
 import time
 
-def speak(text):
+def speak(text, language='sk'):
     space['speaking'] = True
     engine = pyttsx3.init()
     engine.setProperty('rate', 150)
     voices = engine.getProperty('voices')
-    filip = 3
-    engine.setProperty('voice', voices[filip].id)
+    speaker = 3 if language == 'sk' else 2 # 3 is slovak Filip, 0 is David, 1 Markus, 2 Hazel
+    engine.setProperty('voice', voices[speaker].id)
     engine.say(text)
     print('speaking on <'+text+'>')
     engine.runAndWait()
@@ -19,8 +19,9 @@ def speak(text):
 
 class SpeakerAgent(Agent):
 
-    def __init__(self, nameText):
+    def __init__(self, nameText, language='sk'):
         self.nameText = nameText
+        self.language = language
         super().__init__()
         
     def init(self):
@@ -28,9 +29,10 @@ class SpeakerAgent(Agent):
         
     def senseSelectAct(self):
         text = space(default='')[self.nameText]
-        speak(text)
+        speak(text,self.language)
 
 if __name__ == "__main__":  
     text = sys.argv[1] if len(sys.argv) > 1 else "eee"
-    speak(text)
+    language = sys.argv[2] if len(sys.argv) > 2 else "sk"
+    speak(text,language)
     
