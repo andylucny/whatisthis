@@ -8,7 +8,7 @@ def setCameraControls(id,controls):
     for control in controls.keys():
         value = controls[control]
         command += [ "-c", f"{control}={value}" ]
-        _ = subprocess.check_output(command)
+    _ = subprocess.check_output(command)
 
 class CameraAgent(Agent):
 
