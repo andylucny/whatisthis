@@ -6,8 +6,15 @@ Proceedings DISA 2023, Kosice, 2023
 
 https://www.academia.edu/108409965/Tuning_less_Object_Naming_with_a_Foundation_Model
 
-https://youtu.be/nQnEdyfDh5I
 
-https://youtu.be/VFPgt9UyUbI
+[<img src="https://www.agentspace.org/images/nQnEdyfDh5I.png" width="50%">](https://youtu.be/nQnEdyfDh5I "iCubSim naming objects")
 
-https://youtu.be/5B6e-82K_BI
+[<img src="https://www.agentspace.org/images/VFPgt9UyUbI.png" width="50%">](https://youtu.be/VFPgt9UyUbI "iCubSim naming objects (varying background)")
+
+[<img src="https://www.agentspace.org/images/5B6e-82K_BI.png" width="50%">](https://youtu.be/5B6e-82K_BI "NICO naming objects (turning head via the attention map)")
+
+// https://youtu.be/nQnEdyfDh5I
+
+// https://youtu.be/VFPgt9UyUbI
+
+// https://youtu.be/5B6e-82K_BI
