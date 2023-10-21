@@ -18,6 +18,6 @@ https://youtu.be/VFPgt9UyUbI
 [<img src="https://www.agentspace.org/images/VFPgt9UyUbI.png" width="50%">](https://youtu.be/VFPgt9UyUbI "iCubSim naming objects (varying background)")
 
 NICO naming objects (turning head via the attention map) 
-https://youtu.be/5B6e-82K_BI
+https://youtu.be/ugrsf8XPUuc
 
-[<img src="https://www.agentspace.org/images/5B6e-82K_BI.png" width="50%">](https://youtu.be/5B6e-82K_BI "NICO naming objects (turning head via the attention map)")
+[<img src="https://www.agentspace.org/images/ugrsf8XPUuc.png" width="50%">](https://youtu.be/ugrsf8XPUuc "NICO naming objects (turning head via the attention map)")
