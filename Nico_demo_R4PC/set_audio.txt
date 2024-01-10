@@ -1,0 +1,12 @@
+the correct audio playback device for NICO is "USB Audio Device"
+set is via volume control panel as a default
+
+however sometimes speech synthesis is not directly following the setup 
+of the default audio playback device.
+in that case, go to Settings / Manage Sound Devices
+disable the current device used by the speech synthesis
+(you can obtain the list of all devices by "wmic sounddev list brief")
+call "python SpeakerAgent.py Ahoj" (from Nico_demo directory)
+and enable the disabled device 
+
+see fix_voices.txt for pyttsx3 (export, rewrite, import)

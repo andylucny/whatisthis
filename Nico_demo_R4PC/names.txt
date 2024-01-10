@@ -1,0 +1,5 @@
+ball
+duc
+tipot
+mouse
+bottle
