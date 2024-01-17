@@ -19,7 +19,7 @@ class GreetingAgent(Agent):
         if point is None:
             return
         
-        if np.random.uniform(0.0,1.0) <= 0.9:
+        if np.random.uniform(0.0,1.0) <= 0.8:
             return
             
         t0 = time.time()
@@ -46,5 +46,5 @@ class GreetingAgent(Agent):
                 
             t1 = time.time()
             if t1-t0 > 7.0:
-                time.sleep(np.random.uniform(0,30))
+                time.sleep(np.random.uniform(0,300)+300)
                 return

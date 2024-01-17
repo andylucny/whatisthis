@@ -93,7 +93,8 @@ class Space:
                     if agent.stopped:
                         self.variables[name].deregister(agent,type)
                     else:
-                        agent.trigger(None if type == Trigger.NORMAL else name,None if type != Trigger.NAMES_AND_VALUES else value)
+                        if type != Trigger.NAMES_AND_VALUES or value is not None:
+                            agent.trigger(None if type == Trigger.NORMAL else name,None if type != Trigger.NAMES_AND_VALUES else value)
             
     def attach_trigger(self, name, agent, type=Trigger.NORMAL):
         with self.lock:

@@ -1,4 +1,5 @@
 import numpy as np
+import os
 
 def softmax(x):
     e_x = np.exp(x - np.max(x))
@@ -24,20 +25,27 @@ class Vocabulary:
         return [np.cos(i*Vocabulary.dfi), np.sin(i*Vocabulary.dfi)]
 
     def Load():
-        Vocabulary.keys = list(np.loadtxt("keys.npy"))
-        Vocabulary.indices = list(np.loadtxt("indices.npy"))
+        Vocabulary.keys = []
+        Vocabulary.indices = []
         Vocabulary.names = {}
-        with open("names.txt", "rt", encoding='utf8') as f:
-            names = f.read().rstrip('\n').split('\n')
-            for i, name in enumerate(names):
-                Vocabulary.names[i] = name
-        if len(Vocabulary.keys) != len(Vocabulary.indices):
-            print('learning from scratch')
-            Vocabulary.keys = []
-            Vocabulary.indices = []
+        if os.path.exists("keys.npy") and os.path.exists("indices.npy") and os.path.exists("names.txt"):
+            Vocabulary.keys = list(np.loadtxt("keys.npy",ndmin=1))
+            Vocabulary.indices = list(np.loadtxt("indices.npy",ndmin=1))
             Vocabulary.names = {}
+            with open("names.txt", "rt", encoding='utf8') as f:
+                names = f.read().rstrip('\n').split('\n')
+                for i, name in enumerate(names):
+                    Vocabulary.names[i] = name
+            if len(Vocabulary.keys) != len(Vocabulary.indices):
+                print('learning from scratch')
+                Vocabulary.keys = []
+                Vocabulary.indices = []
+                Vocabulary.names = {}
+            else:
+                print(len(Vocabulary.keys),'keys, values loaded for',len(Vocabulary.names.keys()),'names')
         else:
-            print(len(Vocabulary.keys),'keys, values loaded for',len(Vocabulary.names.keys()),'names')
+            print('learning from scratch')
+
 
     def Save():
         np.savetxt("keys.npy",np.array(Vocabulary.keys))

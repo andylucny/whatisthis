@@ -1,6 +1,6 @@
 import os
 import sys
-from agentspace import Agent, space
+from agentspace import Agent, space, Trigger
 import pyttsx3
 import time
 
@@ -25,14 +25,31 @@ class SpeakerAgent(Agent):
         super().__init__()
         
     def init(self):
-        space.attach_trigger(self.nameText,self)
+        space.attach_trigger(self.nameText,self,Trigger.NAMES_AND_VALUES)
         
     def senseSelectAct(self):
-        text = space(default='')[self.nameText]
+        #text = space(default='')[self.nameText]
+        _, text = self.triggered()
         speak(text,self.language)
+        ## repeat eee
+        #if text == 'eee':
+        #    time.sleep(0.3)
+        #    if space(default='')[self.nameText] == '':
+        #        space(validity=0.1)[self.nameText] = text
 
 if __name__ == "__main__":  
-    text = sys.argv[1] if len(sys.argv) > 1 else "eee"
+    text = sys.argv[1] if len(sys.argv) > 1 else "ahoj"
     language = sys.argv[2] if len(sys.argv) > 2 else "sk"
     speak(text,language)
-    
+    time.sleep(1)
+    agent = SpeakerAgent('text','en')
+    time.sleep(1)
+    space['text']='three times speaking'
+    space['text']='three times speaking'
+    space['text']='three times speaking'
+    time.sleep(10)
+    space(validity=0.1)['text']='eee'
+    time.sleep(5)
+    space['text']='the last time speaking'
+    time.sleep(7)
+    agent.stop()

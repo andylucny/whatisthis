@@ -54,6 +54,8 @@ class ListeningAgent(Agent):
             pass
         elif self.match(r'.*(this|it) is (a|the|) (.+)',text):
             named = self.matched()[2]
+            if named == 'background' or named == 'pozadie':
+                named = '_'
             print("mapping",named)
             key = space[self.nameFeatures]
             Vocabulary.Add(key,named)
@@ -61,12 +63,15 @@ class ListeningAgent(Agent):
             space(validity=1.0)[self.nameSpeak] = 'O.K.'
         elif self.match(r'.*what is this.*',text):
             space(validity=0.5)[self.nameIt] = True
-        else:
+        elif text != 'connect':
+            space(priority=100)['point'] = (-1,-1)
+            space(validity=1.0)[self.nameSpeak] = 'eee eee eee'
             print('request:',text)
             print("")
-            generated_text = self.pipe("Give a short answer if the following question is reasonable. Tell 'I have no idea' otherwise. "+text)
+            generated_text = self.pipe("You are a robot with two hands and head, but without legs. Give a short answer if the following question is reasonable. Tell 'I have no idea' otherwise. "+text)
             response = ''
             for sentence in generated_text:
                 response += sentence['generated_text']
             print('response:',response)
             space(validity=1.0)[self.nameSpeak] = response
+            space(priority=100)['point'] = None
