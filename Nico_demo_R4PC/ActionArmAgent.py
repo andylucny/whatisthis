@@ -74,7 +74,7 @@ class ActionArmAgent(Agent):
 
             # go to initialposition
             command0 = {dof : angle for dof, angle in zip(dofs, poses[0]) if dof != 'timestamp' }
-            move_to_position_through_time(command0,0.5)
+            move_to_position_through_time(self.robot,command0,0.5)
             
             # replay the animation
             durations = [ duration * 2 for duration in durations ] # slow down 2x
