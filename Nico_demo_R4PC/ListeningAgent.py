@@ -69,7 +69,7 @@ class ListeningAgent(Agent):
             space(validity=1.0)[self.nameSpeak] = 'O.K.'
         elif self.match(r'.*what is this.*',text):
             space(validity=0.5)[self.nameIt] = True
-        elif self.match(r'.*touch (the|) (L|l)(C|c).*',text):
+        elif self.match(r'.*touch (the|) (LCD|screen).*',text):
             space(validity=0.5)['anim'] = "touchLCD"
         elif text != 'connect':
             #space(priority=100)['point'] = (-1,-1)
@@ -84,6 +84,7 @@ class ListeningAgent(Agent):
             for sentence in generated_text:
                 response += sentence['generated_text']
             response = response.replace("AI language model","artificial creature")
+            response = response.replace("language model","machine")
             response = response.replace("physical body","actual body")
             print('response:',response)
             space(validity=1.0)[self.nameSpeak] = response
