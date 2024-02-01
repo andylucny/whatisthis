@@ -83,7 +83,7 @@ class ListeningAgent(Agent):
             response = ''
             for sentence in generated_text:
                 response += sentence['generated_text']
-            response = response.replace("AI language model","machine")
+            response = response.replace("AI language model","artificial creature")
             response = response.replace("physical body","actual body")
             print('response:',response)
             space(validity=1.0)[self.nameSpeak] = response
