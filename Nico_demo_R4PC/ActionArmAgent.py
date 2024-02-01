@@ -5,11 +5,11 @@ import time
 def loadAnimation(filename):
     with open(filename, 'r') as f:
         lines = f.readlines()
-        concerned_dofs = eval(lines[0])
-        recorded_poses = []
+        dofs = eval(lines[0])
+        poses = []
         for line in lines[1:]:
-            recorded_pose = eval(line[:-1])
-            recorded_poses.append(recorded_pose)
+            pose = eval(line[:-1])
+            poses.append(pose)
 
         timeindex = np.where(np.array(dofs) == 'timestamp')[0][0]
         timestamps = []
@@ -19,7 +19,7 @@ def loadAnimation(filename):
         timestamps = np.array(timestamps,np.float64)/1000.0 #[s]
         durations = [timestamps[0]] + list(timestamps[1:]-timestamps[:-1])
 
-        return concerned_dofs, recorded_poses, durations
+        return dofs, poses, durations
 
     print(filename,"does not exist")
     return None, None, None
