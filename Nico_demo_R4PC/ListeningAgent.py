@@ -16,6 +16,7 @@ class ListeningAgent(Agent):
         self.nameFeatures = nameFeatures
         self.nameIt = nameIt
         self.nameSpeak = nameSpeak
+        self.device = device
         super().__init__()
         
     def match(self,pattern,text):
@@ -34,7 +35,7 @@ class ListeningAgent(Agent):
         Vocabulary.Load()
 
         checkpoint = "./LaMini/"  # LaMini-Flan-T5-248M
-        if device == 'cuda':
+        if self.device == 'cuda':
             tokenizer = AutoTokenizer.from_pretrained(checkpoint)
             base_model = AutoModelForSeq2SeqLM.from_pretrained(checkpoint,device_map='auto',torch_dtype=torch.float32)
         else:
