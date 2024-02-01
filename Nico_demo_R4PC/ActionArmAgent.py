@@ -27,7 +27,6 @@ def loadAnimation(filename):
 def move_to_position_through_time(robot, target_positions, duration):
     if duration == 0:
         return
-    global robot
     # calculate current angular speed
     import copy
     # get the current positions of all joints to move
