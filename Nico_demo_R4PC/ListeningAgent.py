@@ -70,8 +70,8 @@ class ListeningAgent(Agent):
         elif self.match(r'.*what is this.*',text):
             space(validity=0.5)[self.nameIt] = True
         elif text != 'connect':
-            space(priority=100)['point'] = (-1,-1)
-            space(validity=1.0)[self.nameSpeak] = 'eee eee eee'
+            #space(priority=100)['point'] = (-1,-1)
+            #space(validity=1.0)[self.nameSpeak] = 'eee eee eee'
             print('request:',text)
             print("")
             t0 = time.time()
@@ -83,4 +83,4 @@ class ListeningAgent(Agent):
                 response += sentence['generated_text']
             print('response:',response)
             space(validity=1.0)[self.nameSpeak] = response
-            space(priority=100)['point'] = None
+            #space(priority=100)['point'] = None
