@@ -7,7 +7,7 @@ import time
 def speak(text, language='sk'):
     space['speaking'] = True
     engine = pyttsx3.init()
-    engine.setProperty('rate', 150)
+    engine.setProperty('rate', 120)
     voices = engine.getProperty('voices')
     speaker = 3 if language == 'sk' else 2 # 3 is slovak Filip, 0 is David, 1 Markus, 2 Hazel
     engine.setProperty('voice', voices[speaker].id)
