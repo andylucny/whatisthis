@@ -69,7 +69,7 @@ class ListeningAgent(Agent):
             space(validity=1.0)[self.nameSpeak] = 'O.K.'
         elif self.match(r'.*what is this.*',text):
             space(validity=0.5)[self.nameIt] = True
-        elif self.match(r'.*touch (the|) (LCD|screen).*',text):
+        elif self.match(r'.*touch (the|) (lcd|screen).*',text):
             space(validity=0.5)['anim'] = "touchLCD"
         elif text != 'connect':
             #space(priority=100)['point'] = (-1,-1)
