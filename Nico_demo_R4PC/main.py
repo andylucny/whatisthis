@@ -7,7 +7,8 @@ from agentspace import Agent, space, Trigger
 
 from CameraAgent import CameraAgent
 from PerceptionAgent import PerceptionAgent
-from ActionAgent import ActionAgent
+from ActionHeadAgent import ActionHeadAgent
+from ActionArmAgent import ActionArmAgent
 from ViewerAgent import ViewerAgent
 from ControlAgent import ControlAgent
 from SpeakerAgent import SpeakerAgent
@@ -46,7 +47,9 @@ time.sleep(1)
 CameraAgent(2,'wide camera',170) # get image from the left eye
 PerceptionAgent('camera','features','points','point') # dino model
 time.sleep(1)
-ActionAgent(robot,'point') # turn to shown objects
+ActionHeadAgent(robot,'point') # turn to shown objects
+time.sleep(1)
+ActionArmAgent(robot,'anim') # turn to shown objects
 time.sleep(1)
 ControlAgent('features','name','confidence','query') # asociating 
 time.sleep(1)

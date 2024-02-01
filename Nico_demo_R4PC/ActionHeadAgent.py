@@ -3,7 +3,7 @@ import numpy as np
 import cv2 as cv
 import time
 
-class ActionAgent(Agent):
+class ActionHeadAgent(Agent):
 
     def __init__(self, robot, namePoint):
         self.robot = robot
@@ -43,12 +43,12 @@ class ActionAgent(Agent):
         
         if reset_x:
             delta_degrees_x = -head_x
-            print("RESET X")
+            #print("RESET X")
         else:
             delta_degrees_x = np.arctan2((0.5-x)*np.tan(20*np.pi/180),0.5)*180/np.pi
         if reset_y:
             delta_degrees_y = -head_y - 25
-            print("RESET Y")
+            #print("RESET Y")
         else:
             delta_degrees_y = np.arctan2((0.5-y)*np.tan(20*np.pi/180),0.5)*180/np.pi
         
