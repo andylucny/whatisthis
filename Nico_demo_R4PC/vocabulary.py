@@ -81,6 +81,8 @@ class Vocabulary:
         if len(Vocabulary.keys) == 0:
             return None, 0
         values = [ Vocabulary.act(i) for i in Vocabulary.indices ] 
+        if len(values) == 0:
+            return None, 0
         act, confidence = Attention(query,Vocabulary.keys,values,len(query)**0.5)
         psi = np.arctan2(act[1],act[0])
         ind = int(np.round(psi/Vocabulary.dfi))
