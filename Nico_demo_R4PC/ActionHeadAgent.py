@@ -2,6 +2,31 @@ from agentspace import Agent, space
 import numpy as np
 import cv2 as cv
 import time
+from scipy.optimize import curve_fit
+
+headLimits = [ # head_y ... limit head_z
+    [-50,  2],
+    [-46, 13],
+    [-40, 27],
+    [-35, 30],
+    [-30, 33],
+    [-25, 40],
+    [-20, 51],
+    [-16, 89],
+]
+
+hx, hy = np.array(headLimits).T
+
+def func(x,a,b,c,d,e,f):
+    return a*x**5 + b*x**4 + c*x**3 + d*x**2 + e*x + f
+
+coefs, _ = curve_fit(func, hx, hy)
+
+def funcinstance(x):
+    return np.int32(func(x,coefs[0],coefs[1],coefs[2],coefs[3],coefs[4],coefs[5]))
+
+#print(funcinstance(hx))
+#print(hy)
 
 class ActionHeadAgent(Agent):
 
@@ -25,6 +50,8 @@ class ActionHeadAgent(Agent):
         
         head_x = self.robot.getAngle("head_z")
         head_y = self.robot.getAngle("head_y")
+        
+        limit_x = funcinstance(head_y)
         
         reset_x, reset_y = False, False
         if np.abs(head_x) > 40:
@@ -51,6 +78,11 @@ class ActionHeadAgent(Agent):
             #print("RESET Y")
         else:
             delta_degrees_y = np.arctan2((0.5-y)*np.tan(20*np.pi/180),0.5)*180/np.pi
+        
+        if head_y + delta_degrees_y <= -limit_x+1:
+            delta_degrees_y = 0.0
+        if head_y + delta_degrees_y >= limit_x-1:
+            delta_degrees_y = 0.0
         
         angular_speed = 0.04
         limit = 2.0 
